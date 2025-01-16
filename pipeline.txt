@@ -15,14 +15,14 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: '<URL>'
+                git branch: 'main', url: 'https://github.com/Alekya1210/DevSecOps.git'
             }
         }
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar-server') {
                     sh ''' 
-                    $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=Netflix
+                    $SCANNER_HOME/bin/SonarQube Scanner -Dsonar.projectKey=Netflix
                     '''
                 }
             }
@@ -48,22 +48,22 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-credentials') {
-                        sh "docker build --build-arg TMDB_V3_API_KEY=<your-api-key> -t netflix ."
-                        sh "docker tag netflix sirishassss/netflix:latest"
-                        sh "docker push sirishassss/netflix:latest"
+                    withDockerRegistry(credentialsId: 'docker') {
+                        sh "docker build -t netflixxx ."
+                        sh "docker tag netflixxx akhiladocker123/netflixxx:latest"
+                        sh "docker push akhiladocker123/netflixxx:latest"
                     }
                 }
             }
         }
         stage('TRIVY Image Scan') {
             steps {
-                sh "trivy image sirishassss/netflix:latest > trivyimage.txt"
+                sh "trivy image akhiladocker123/netflixxx:latest > trivyimage.txt"
             }
         }
         stage('Deploy to container') {
             steps {
-                sh 'docker run -d -p 8081:80 sirishassss/netflix:latest'
+                sh 'docker run -d -p 8081:80 akhiladocker123/netflixxx:latest'
             }
         }
     }
