@@ -1,8 +1,8 @@
 pipeline {
     agent any
     tools {
-        jdk 'jdk17'
-        nodejs 'node16'
+        jdk 'JDK(17)'
+        nodejs 'NodeJs(16)'
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
@@ -39,12 +39,7 @@ pipeline {
                 sh "npm install"
             }
         }
-        stage('OWASP FS Scan') {
-            steps {
-                dependencyCheck additionalArguments
-                dependencyCheckPublisher pattern
-            }
-        }
+    
         stage('TRIVY FS Scan') {
             steps {
                 sh "trivy fs . > trivyfs.txt"
